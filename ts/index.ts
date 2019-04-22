@@ -5,23 +5,6 @@ let deleter = (num) => {
     localStorage.setItem("books", JSON.stringify(allBooks));
 };
 
-let clickX = (times: number) => {
-    let imgElem = document.getElementById("all-books").children[times].children[0];
-
-    if(imgElem.tagName == "IMG") {
-        document.getElementById("all-books").children[times].children[2].addEventListener('click', () => {
-            (<HTMLElement>document.getElementById("all-books").children[times]).style.display = "none";
-            deleter(times);
-        });   
-    }
-    else {
-        document.getElementById("all-books").children[times].children[1].addEventListener('click', () => {
-            (<HTMLElement>document.getElementById("all-books").children[times]).style.display = "none";
-            deleter(times);
-        });   
-    }
-};
-
 let frontCoverVisual = document.getElementById("front-cover-visual");
 let backCoverVisual = document.getElementById("back-cover-visual");
 
@@ -67,6 +50,20 @@ document.getElementById("add-book-form").addEventListener('submit', (event) => {
     backCoverSrc = undefined;
 
     for(let i = 0; i < allBooks.length; i++) {
-        clickX(i);
+        document.getElementById("all-books").children[i].id = i + "";   
+    }
+});
+
+document.addEventListener('click', (event) => {
+    let times = document.createElement("span");
+    times.innerHTML = "&times;";
+
+    if((<HTMLElement>event.target).innerHTML == times.innerHTML) {
+        deleter((<HTMLElement>event.target).parentElement.id);
+        document.getElementById((<HTMLElement>event.target).parentElement.id).remove();
+        for(let i = 0; i < allBooks.length; i++) {
+            document.getElementById("all-books").children[i].id = i + "";   
+        }
+        console.log(document.getElementById("all-books"));
     }
 });

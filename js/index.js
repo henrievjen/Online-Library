@@ -62,21 +62,6 @@ let deleter = (num) => {
     allBooks.splice(num, 1);
     localStorage.setItem("books", JSON.stringify(allBooks));
 };
-let clickX = (times) => {
-    let imgElem = document.getElementById("all-books").children[times].children[0];
-    if (imgElem.tagName == "IMG") {
-        document.getElementById("all-books").children[times].children[2].addEventListener('click', () => {
-            document.getElementById("all-books").children[times].style.display = "none";
-            deleter(times);
-        });
-    }
-    else {
-        document.getElementById("all-books").children[times].children[1].addEventListener('click', () => {
-            document.getElementById("all-books").children[times].style.display = "none";
-            deleter(times);
-        });
-    }
-};
 let frontCoverVisual = document.getElementById("front-cover-visual");
 let backCoverVisual = document.getElementById("back-cover-visual");
 let frontCoverSrc;
@@ -111,7 +96,19 @@ document.getElementById("add-book-form").addEventListener('submit', (event) => {
     frontCoverSrc = undefined;
     backCoverSrc = undefined;
     for (let i = 0; i < allBooks.length; i++) {
-        clickX(i);
+        document.getElementById("all-books").children[i].id = i + "";
+    }
+});
+document.addEventListener('click', (event) => {
+    let times = document.createElement("span");
+    times.innerHTML = "&times;";
+    if (event.target.innerHTML == times.innerHTML) {
+        deleter(event.target.parentElement.id);
+        document.getElementById(event.target.parentElement.id).remove();
+        for (let i = 0; i < allBooks.length; i++) {
+            document.getElementById("all-books").children[i].id = i + "";
+        }
+        console.log(document.getElementById("all-books"));
     }
 });
 let onLoadSet = () => {
@@ -122,7 +119,7 @@ let onLoadSet = () => {
         book.visualConstruct();
     }
     for (let i = 0; i < allBooks.length; i++) {
-        clickX(i);
+        document.getElementById("all-books").children[i].id = i + "";
     }
 };
 let readImageFront = (input) => {

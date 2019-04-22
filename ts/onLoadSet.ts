@@ -9,7 +9,7 @@ let onLoadSet = () => {
     }
 
     for(let i = 0; i < allBooks.length; i++) {
-        clickX(i);
+        document.getElementById("all-books").children[i].id = i + "";   
     }
     
 };
