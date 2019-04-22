@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Online Library</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" type="image/x-icon" href="images/book-icon.png" />
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+        <!-- Popper JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" type="text/css" href="style/index.css">
+    </head>
+
+    <body onload="onLoadSet()">
+
+        <div class="jumbotron text-center">
+            <h1>Online Library</h1>
+            <small>Create a custom library</small>
+        </div>
+
+        <div class="row">
+            <form id="add-book-form" class="col-sm-4 add-book-div p-4 ml-4" autocomplete="off">
+
+                <!-- Title -->
+                <div class="form-group">
+                    <label for="title">Book Title:</label>
+                    <input class="form-control" id="title" type="text" placeholder="Title" required>
+                </div>
+                
+                <!-- Author -->
+                <div class="form-group">
+                    <label for="author">Author:</label>
+                    <input class="form-control" id="author" type="text" placeholder="Author" required>
+                </div>
+
+                <!-- Genre -->
+                <div class="form-group">
+                    <label for="genre">Genre:</label>
+                    <input class="form-control" id="genre" type="text" placeholder="Genre">
+                </div>
+
+                <!-- Front Cover Image -->
+                <div class="form-group d-none">
+                    <label for="front-cover">Front Cover:</label>
+                    <input class="form-control-file" id="front-cover" type="file" onchange="readImageFront(this);">
+                </div>
+
+                <!-- Back Cover Image -->
+                <div class="form-group d-none">
+                    <label for="back-cover">Back Cover:</label>
+                    <input class="form-control-file" id="back-cover" type="file" onchange="readImageBack(this);">
+                </div>
+
+                <!-- Front/Back Cover Visual Add -->
+                <div class="cover-parent">
+                    <div class="border border-primary text-center mr-3 mb-3 p-2 overflow-hidden" id="front-cover-visual">
+                        <span>Add Front Cover Image</span>
+                        <img class="w-100" src="images/plus-symbol.png">
+                    </div>
+
+                    <div class="border border-primary text-center mb-3 p-2 overflow-hidden" id="back-cover-visual">
+                        <span>Add Back Cover Image</span>
+                        <img class="w-100" src="images/plus-symbol.png">
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Submit</button>
+
+            </form>
+
+            <!-- Where the books will appear after added -->
+            <div id="all-books" class="m-4 mb-3 col-12"></div>
+
+        </div>
+
+        
+        <!-- Custom JS -->
+        <script src="js/index.js"></script>
+
+    </body>
+
+</html>
