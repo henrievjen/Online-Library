@@ -26,8 +26,11 @@
     <body onload="onLoadSet()">
 
         <div class="jumbotron text-center">
-            <h1>Online Library</h1>
-            <small>Create a custom library</small>
+            <h1 id="library-name-text">Online Library</h1>
+            <small id="library-owner-text">Create a custom library</small>
+
+            <!-- Settings Icon -->
+            <img src="images/settings-gear.png" id="settings-gear" title="Settings" data-toggle="modal" data-target="#settings-modal">
         </div>
 
         <div class="row">
@@ -77,13 +80,63 @@
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary" title="Create a new book">Submit</button>
 
             </form>
 
             <!-- Where the books will appear after added -->
             <div id="all-books" class="m-4 mb-3 col-12"></div>
 
+        </div>
+
+        <!-- Settings Modal -->
+        <div class="modal fade" id="settings-modal" tabindex="-1" role="dialog" aria-labelledby="settings-modal-label" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="settings-modal-label">Settings</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">x</span>
+                </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row m-3 mb-5">
+                        <label class="col" for="library-name">Library Name:</label>
+                        <input type="text" id="library-name" class="col">
+                    </div>
+
+                    <div class="row m-3 mb-5">
+                        <label class="col" for="library-owner">Library Owner:</label>
+                        <input type="text" id="library-owner" class="col">
+                    </div>
+
+                    <div class="m-3 mb-5">
+                        <span>Background Color</span>
+
+                        <span class="dropdown" id="dropdown">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" id="background-color-button"></button>
+                            <div class="dropdown-menu">
+                              <a class="dropdown-item" href="#" onclick="document.getElementById('background-color-button').innerText = this.innerText.trim();">White <span class="badge border border-dark" id="aligned-right" style="background-color: rgb(255, 255, 255)">&nbsp; &nbsp; &nbsp; &nbsp;</span></a>
+                              <a class="dropdown-item" href="#" onclick="document.getElementById('background-color-button').innerText = this.innerText.trim();">Grey <span class="badge border border-dark" id="aligned-right" style="background-color: rgb(220, 219, 226)">&nbsp; &nbsp; &nbsp; &nbsp;</span></a>
+                              <a class="dropdown-item" href="#" onclick="document.getElementById('background-color-button').innerText = this.innerText.trim();">Light Blue <span class="badge border border-dark" id="aligned-right" style="background-color: rgb(236, 244, 255)">&nbsp; &nbsp; &nbsp; &nbsp;</span></a>
+                            </div>
+                        </span>
+                    </div>
+
+                    <div class="m-3">
+                        <span>Delete all books</span>
+
+                        <button type="button" class="btn btn-danger" id="delete-all-books-button" style="position: absolute; right: 25px;" title="This will delete your whole library">Delete</button>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="save-settings" data-dismiss="modal">Save changes</button>
+                </div>
+            </div>
+            </div>
         </div>
 
         

@@ -1,3 +1,16 @@
+#settings-gear {
+    position: absolute;
+    width: 30px;
+    height: auto;
+    top: 0;
+    left: 0;
+    margin: 5px;
+}
+
+#settings-gear:hover {
+    cursor: pointer;
+}
+
 .add-book-div {
     border: solid 2px #aaa;
     border-radius: 2%;
@@ -61,10 +74,27 @@
     height: 25px;
     font-size: 100%;
     opacity: 0;
-    -webkit-transition: opacity 0.2s; /* For Safari 3.1 to 6.0 */
+    -webkit-transition: opacity 0.2s;
     transition: opacity 0.2s;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
 }
 
 #delete-book:hover {
     cursor: pointer;
+}
+
+#dropdown {
+    position: absolute;
+    margin-top: -7px;
+    right: 20px;
+}
+
+#aligned-right {
+    position: absolute;
+    margin-top: 1px;
+    right: 15px;
 }

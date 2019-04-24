@@ -57,7 +57,23 @@ class Book {
         }
     }
 }
+// Array containing all books, held in localStorage
 let allBooks = [];
+// Settings Object
+let settings = undefined;
+let setBgColor = (bgColor) => {
+    switch (bgColor) {
+        case "White":
+            document.body.style.backgroundColor = "rgb(255, 255, 255)";
+            break;
+        case "Grey":
+            document.body.style.backgroundColor = "rgb(220, 219, 226)";
+            break;
+        case "Light Blue":
+            document.body.style.backgroundColor = "rgb(236, 244, 255)";
+            break;
+    }
+};
 let deleter = (num) => {
     allBooks.splice(num, 1);
     localStorage.setItem("books", JSON.stringify(allBooks));
@@ -103,23 +119,86 @@ document.addEventListener('click', (event) => {
     let times = document.createElement("span");
     times.innerHTML = "&times;";
     if (event.target.innerHTML == times.innerHTML) {
-        deleter(event.target.parentElement.id);
-        document.getElementById(event.target.parentElement.id).remove();
-        for (let i = 0; i < allBooks.length; i++) {
-            document.getElementById("all-books").children[i].id = i + "";
+        let sureDelete = confirm("Are you sure you want to delete this book? All content will be lost.");
+        if (sureDelete) {
+            deleter(event.target.parentElement.id);
+            document.getElementById(event.target.parentElement.id).remove();
+            for (let i = 0; i < allBooks.length; i++) {
+                document.getElementById("all-books").children[i].id = i + "";
+            }
         }
-        console.log(document.getElementById("all-books"));
+    }
+});
+$('#settings-modal').on('hidden.bs.modal', () => {
+    // Clear library name value
+    document.getElementById("library-name").value = "";
+    // Clear library owner value
+    document.getElementById("library-owner").value = "";
+});
+document.getElementById("settings-gear").addEventListener('click', () => {
+    document.getElementById("background-color-button").innerHTML = settings.backgroundColor;
+});
+document.getElementById("save-settings").addEventListener('click', () => {
+    settings.backgroundColor = document.getElementById("background-color-button").innerHTML;
+    setBgColor(settings.backgroundColor);
+    localStorage.setItem("settings", JSON.stringify(settings));
+    if (document.getElementById("library-name").value.trim() != "") {
+        settings.libraryName = document.getElementById("library-name").value;
+        document.getElementById("library-name-text").innerHTML = settings.libraryName;
+    }
+    if (document.getElementById("library-owner").value.trim() != "") {
+        settings.libraryOwner = document.getElementById("library-owner").value;
+        document.getElementById("library-owner-text").innerHTML = settings.libraryOwner;
+    }
+});
+// Delete all books
+document.getElementById("delete-all-books-button").addEventListener('click', () => {
+    let deleteAllBooks = confirm("Are you sure you want to delete all your books?");
+    if (deleteAllBooks) {
+        localStorage.setItem("books", JSON.stringify([]));
+        onLoadSet();
+        setTimeout(() => {
+            location.reload();
+        }, 200);
     }
 });
 let onLoadSet = () => {
     allBooks = JSON.parse(localStorage.getItem("books"));
-    let allBooksLength = allBooks.length;
+    let allBooksLength;
+    try {
+        allBooksLength = allBooks.length;
+    }
+    catch (err) {
+        allBooksLength = 0;
+    }
     for (let i = 0; i < allBooksLength; i++) {
         let book = new Book(allBooks[i].title, allBooks[i].author, allBooks[i].genre, allBooks[i].frontCoverSrc, allBooks[i].backCoverSrc);
         book.visualConstruct();
     }
-    for (let i = 0; i < allBooks.length; i++) {
-        document.getElementById("all-books").children[i].id = i + "";
+    try {
+        for (let i = 0; i < allBooks.length; i++) {
+            document.getElementById("all-books").children[i].id = i + "";
+        }
+        try {
+            settings = JSON.parse(localStorage.getItem("settings"));
+            setBgColor(settings.backgroundColor);
+        }
+        catch (err) {
+            settings = {
+                backgroundColor: "White"
+            };
+        }
+    }
+    catch (err) {
+        try {
+            settings = JSON.parse(localStorage.getItem("settings"));
+            setBgColor(settings.backgroundColor);
+        }
+        catch (err) {
+            settings = {
+                backgroundColor: "White"
+            };
+        }
     }
 };
 let readImageFront = (input) => {
