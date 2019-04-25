@@ -1,3 +1,7 @@
+.jumbotron {
+    background-color: rgb(231, 231, 231);
+}
+
 #settings-gear {
     position: absolute;
     width: 30px;
@@ -87,7 +91,7 @@
     cursor: pointer;
 }
 
-#dropdown {
+#dropdown, #dropdown-heading {
     position: absolute;
     margin-top: -7px;
     right: 20px;
@@ -97,4 +101,18 @@
     position: absolute;
     margin-top: 1px;
     right: 15px;
+}
+
+#delete-library-name, #delete-library-owner {
+    margin-top: 4px;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    display: none;
+}
+
+#delete-library-name:hover, #delete-library-owner:hover {
+    cursor: pointer;
 }

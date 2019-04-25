@@ -61,6 +61,16 @@ class Book {
 let allBooks = [];
 // Settings Object
 let settings = undefined;
+let setBgColorHead = (bgColor) => {
+    switch (bgColor) {
+        case "Light Grey":
+            document.getElementById("jumbotron").style.backgroundColor = "rgb(231, 231, 231)";
+            break;
+        case "Grey":
+            document.getElementById("jumbotron").style.backgroundColor = "rgb(201, 201, 201)";
+            break;
+    }
+};
 let setBgColor = (bgColor) => {
     switch (bgColor) {
         case "White":
@@ -135,21 +145,32 @@ $('#settings-modal').on('hidden.bs.modal', () => {
     // Clear library owner value
     document.getElementById("library-owner").value = "";
 });
+// Click Settings Gear
 document.getElementById("settings-gear").addEventListener('click', () => {
-    document.getElementById("background-color-button").innerHTML = settings.backgroundColor;
+    document.getElementById("background-color-button").innerText = settings.backgroundColor;
+    document.getElementById("background-color-heading-button").innerText = settings.backgroundColorHeading;
+    if (settings.libraryNameShow) {
+        document.getElementById("library-name").value = settings.libraryName;
+    }
+    if (settings.libraryOwnerShow) {
+        document.getElementById("library-owner").value = settings.libraryOwner;
+    }
+    if (document.getElementById("library-name-text").innerText != "Online Library") {
+        document.getElementById("delete-library-name").style.display = "inline";
+    }
+    if (document.getElementById("library-owner-text").innerText != "Create a custom library") {
+        document.getElementById("delete-library-owner").style.display = "inline";
+    }
 });
-document.getElementById("save-settings").addEventListener('click', () => {
-    settings.backgroundColor = document.getElementById("background-color-button").innerHTML;
-    setBgColor(settings.backgroundColor);
-    localStorage.setItem("settings", JSON.stringify(settings));
-    if (document.getElementById("library-name").value.trim() != "") {
-        settings.libraryName = document.getElementById("library-name").value;
-        document.getElementById("library-name-text").innerHTML = settings.libraryName;
-    }
-    if (document.getElementById("library-owner").value.trim() != "") {
-        settings.libraryOwner = document.getElementById("library-owner").value;
-        document.getElementById("library-owner-text").innerHTML = settings.libraryOwner;
-    }
+// Delete Library Name
+document.getElementById("delete-library-name").addEventListener('click', () => {
+    document.getElementById("delete-library-name").style.display = "none";
+    document.getElementById("library-name").value = "";
+});
+// Delete Library Owner
+document.getElementById("delete-library-owner").addEventListener('click', () => {
+    document.getElementById("delete-library-owner").style.display = "none";
+    document.getElementById("library-owner").value = "";
 });
 // Delete all books
 document.getElementById("delete-all-books-button").addEventListener('click', () => {
@@ -160,6 +181,56 @@ document.getElementById("delete-all-books-button").addEventListener('click', () 
         setTimeout(() => {
             location.reload();
         }, 200);
+    }
+});
+// Delete all data
+document.getElementById("delete-all-data-button").addEventListener('click', () => {
+    let deleteAllData = confirm("Are you sure you want to delete all your date? Note: everything will be deleted.");
+    if (deleteAllData) {
+        localStorage.setItem("books", JSON.stringify([]));
+        delete settings.libraryName;
+        delete settings.libraryOwner;
+        delete settings.libraryNameShow;
+        delete settings.libraryOwnerShow;
+        settings.backgroundColor = "White";
+        settings.backgroundColorHeading = "Light Grey";
+        localStorage.setItem("settings", JSON.stringify(settings));
+        onLoadSet();
+        setTimeout(() => {
+            location.reload();
+        }, 200);
+    }
+});
+// Settings Save
+document.getElementById("save-settings").addEventListener('click', () => {
+    settings.backgroundColor = document.getElementById("background-color-button").innerHTML;
+    settings.backgroundColorHeading = document.getElementById("background-color-heading-button").innerHTML;
+    setBgColor(settings.backgroundColor);
+    setBgColorHead(settings.backgroundColorHeading);
+    localStorage.setItem("settings", JSON.stringify(settings));
+    if (document.getElementById("library-name").value.trim() != "") {
+        settings.libraryName = document.getElementById("library-name").value.trim();
+        document.getElementById("library-name-text").innerText = settings.libraryName;
+        settings.libraryNameShow = true;
+        localStorage.setItem("settings", JSON.stringify(settings));
+    }
+    else {
+        delete settings.libraryName;
+        document.getElementById("library-name-text").innerText = "Online Library";
+        settings.libraryNameShow = false;
+        localStorage.setItem("settings", JSON.stringify(settings));
+    }
+    if (document.getElementById("library-owner").value.trim() != "") {
+        settings.libraryOwner = document.getElementById("library-owner").value.trim();
+        document.getElementById("library-owner-text").innerText = settings.libraryOwner;
+        settings.libraryOwnerShow = true;
+        localStorage.setItem("settings", JSON.stringify(settings));
+    }
+    else {
+        delete settings.libraryOwner;
+        document.getElementById("library-owner-text").innerText = "Create a custom library";
+        settings.libraryOwnerShow = false;
+        localStorage.setItem("settings", JSON.stringify(settings));
     }
 });
 let onLoadSet = () => {
@@ -175,30 +246,64 @@ let onLoadSet = () => {
         let book = new Book(allBooks[i].title, allBooks[i].author, allBooks[i].genre, allBooks[i].frontCoverSrc, allBooks[i].backCoverSrc);
         book.visualConstruct();
     }
+    // Library Name
+    try {
+        settings = JSON.parse(localStorage.getItem("settings"));
+        if (settings.libraryName != undefined) {
+            document.getElementById("library-name-text").innerText = settings.libraryName;
+        }
+        if (settings.libraryNameShow != undefined) {
+            document.getElementById("library-name").innerText = settings.libraryName;
+        }
+    }
+    catch (err) {
+        document.getElementById("library-name-text").innerText = "Online Library";
+    }
+    // Library Owner
+    try {
+        settings = JSON.parse(localStorage.getItem("settings"));
+        if (settings.libraryOwner != undefined) {
+            document.getElementById("library-owner-text").innerText = settings.libraryOwner;
+        }
+        if (settings.libraryOwnerShow != undefined) {
+            document.getElementById("library-owner").innerText = settings.libraryOwner;
+        }
+    }
+    catch (err) {
+        document.getElementById("library-owner-text").innerText = "Create a custom library";
+    }
     try {
         for (let i = 0; i < allBooks.length; i++) {
             document.getElementById("all-books").children[i].id = i + "";
         }
-        try {
-            settings = JSON.parse(localStorage.getItem("settings"));
-            setBgColor(settings.backgroundColor);
-        }
-        catch (err) {
-            settings = {
-                backgroundColor: "White"
-            };
-        }
     }
     catch (err) {
-        try {
-            settings = JSON.parse(localStorage.getItem("settings"));
-            setBgColor(settings.backgroundColor);
+        // Do nothing
+    }
+    // Settings Background Color Heading
+    try {
+        settings = JSON.parse(localStorage.getItem("settings"));
+        if (!settings.backgroundColorHeading) {
+            settings.backgroundColorHeading = "Light Grey";
         }
-        catch (err) {
-            settings = {
-                backgroundColor: "White"
-            };
-        }
+        setBgColorHead(settings.backgroundColorHeading);
+    }
+    catch (err) {
+        settings = {
+            backgroundColor: "White",
+            backgroundColorHeading: "Light Grey"
+        };
+    }
+    // Settings Background Color
+    try {
+        settings = JSON.parse(localStorage.getItem("settings"));
+        setBgColor(settings.backgroundColor);
+    }
+    catch (err) {
+        settings = {
+            backgroundColor: "White",
+            backgroundColorHeading: "Light Grey"
+        };
     }
 };
 let readImageFront = (input) => {

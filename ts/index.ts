@@ -4,6 +4,17 @@ let allBooks = [];
 // Settings Object
 let settings = undefined;
 
+let setBgColorHead = (bgColor: string) => {
+    switch(bgColor) {
+        case "Light Grey":
+            document.getElementById("jumbotron").style.backgroundColor = "rgb(231, 231, 231)";
+            break;
+        case "Grey":
+            document.getElementById("jumbotron").style.backgroundColor = "rgb(201, 201, 201)";
+            break;
+    }
+};
+
 let setBgColor = (bgColor: string) => {
     switch(bgColor) {
         case "White":
@@ -42,11 +53,11 @@ backCoverVisual.addEventListener('click', () => {
 
 document.getElementById("add-book-form").addEventListener('submit', (event) => {
     event.preventDefault();
-    let title = (<HTMLInputElement>document.getElementById("title")).value;
-    let author = (<HTMLInputElement>document.getElementById("author")).value;
-    let genre = (<HTMLInputElement>document.getElementById("genre")).value;
+    let title: string = (<HTMLInputElement>document.getElementById("title")).value;
+    let author: string = (<HTMLInputElement>document.getElementById("author")).value;
+    let genre: string = (<HTMLInputElement>document.getElementById("genre")).value;
 
-    let book = new Book(title, author, genre, frontCoverSrc, backCoverSrc);
+    let book: Book = new Book(title, author, genre, frontCoverSrc, backCoverSrc);
     book.pushbooks();
 
     (<HTMLInputElement>document.getElementById("title")).value = "";
@@ -79,7 +90,7 @@ document.addEventListener('click', (event) => {
     times.innerHTML = "&times;";
 
     if((<HTMLElement>event.target).innerHTML == times.innerHTML) {
-        let sureDelete = confirm("Are you sure you want to delete this book? All content will be lost.");
+        let sureDelete: Boolean = confirm("Are you sure you want to delete this book? All content will be lost.");
 
         if(sureDelete) {
             deleter((<HTMLElement>event.target).parentElement.id);
@@ -100,28 +111,40 @@ $('#settings-modal').on('hidden.bs.modal', () => {
 });
 
 
+// Click Settings Gear
 document.getElementById("settings-gear").addEventListener('click', () => {
-    document.getElementById("background-color-button").innerHTML = settings.backgroundColor;
-});
+    document.getElementById("background-color-button").innerText = settings.backgroundColor;
+    document.getElementById("background-color-heading-button").innerText = settings.backgroundColorHeading;
 
-document.getElementById("save-settings").addEventListener('click', () => {
-    settings.backgroundColor = document.getElementById("background-color-button").innerHTML;
-    
-    setBgColor(settings.backgroundColor);
-
-    localStorage.setItem("settings", JSON.stringify(settings));
-
-    if((<HTMLInputElement>document.getElementById("library-name")).value.trim() != "") {
-        settings.libraryName = (<HTMLInputElement>document.getElementById("library-name")).value;
-        document.getElementById("library-name-text").innerHTML = settings.libraryName;
+    if(settings.libraryNameShow) {
+        (<HTMLInputElement>document.getElementById("library-name")).value = settings.libraryName;
     }
 
-    if((<HTMLInputElement>document.getElementById("library-owner")).value.trim() != "") {
-        settings.libraryOwner = (<HTMLInputElement>document.getElementById("library-owner")).value;
-        document.getElementById("library-owner-text").innerHTML = settings.libraryOwner;
+    if(settings.libraryOwnerShow) {
+        (<HTMLInputElement>document.getElementById("library-owner")).value = settings.libraryOwner;
+    }
+
+    if(document.getElementById("library-name-text").innerText != "Online Library") {
+        document.getElementById("delete-library-name").style.display = "inline";
+    }
+
+    if(document.getElementById("library-owner-text").innerText != "Create a custom library") {
+        document.getElementById("delete-library-owner").style.display = "inline";
     }
 });
 
+
+// Delete Library Name
+document.getElementById("delete-library-name").addEventListener('click', () => {
+    document.getElementById("delete-library-name").style.display = "none";
+    (<HTMLInputElement>document.getElementById("library-name")).value = "";
+});
+
+// Delete Library Owner
+document.getElementById("delete-library-owner").addEventListener('click', () => {
+    document.getElementById("delete-library-owner").style.display = "none";
+    (<HTMLInputElement>document.getElementById("library-owner")).value = "";
+});
 
 // Delete all books
 document.getElementById("delete-all-books-button").addEventListener('click', () => {
@@ -133,5 +156,62 @@ document.getElementById("delete-all-books-button").addEventListener('click', () 
         setTimeout(() => {
             location.reload();
         }, 200);
+    }
+});
+
+// Delete all data
+document.getElementById("delete-all-data-button").addEventListener('click', () => {
+    let deleteAllData: Boolean = confirm("Are you sure you want to delete all your date? Note: everything will be deleted.");
+
+    if(deleteAllData) {
+        localStorage.setItem("books", JSON.stringify([]));
+        delete settings.libraryName;
+        delete settings.libraryOwner;
+        delete settings.libraryNameShow;
+        delete settings.libraryOwnerShow;
+        settings.backgroundColor = "White";
+        settings.backgroundColorHeading = "Light Grey";
+        localStorage.setItem("settings", JSON.stringify(settings));
+        onLoadSet();
+        setTimeout(() => {
+            location.reload();
+        }, 200);
+    }
+});
+
+// Settings Save
+document.getElementById("save-settings").addEventListener('click', () => {
+    settings.backgroundColor = document.getElementById("background-color-button").innerHTML;
+    settings.backgroundColorHeading = document.getElementById("background-color-heading-button").innerHTML;
+    
+    setBgColor(settings.backgroundColor);
+    setBgColorHead(settings.backgroundColorHeading);
+
+    localStorage.setItem("settings", JSON.stringify(settings));
+
+    if((<HTMLInputElement>document.getElementById("library-name")).value.trim() != "") {
+        settings.libraryName = (<HTMLInputElement>document.getElementById("library-name")).value.trim();
+        document.getElementById("library-name-text").innerText = settings.libraryName;
+        settings.libraryNameShow = true;
+        localStorage.setItem("settings", JSON.stringify(settings));
+    }
+    else {
+        delete settings.libraryName;
+        document.getElementById("library-name-text").innerText = "Online Library";
+        settings.libraryNameShow = false;
+        localStorage.setItem("settings", JSON.stringify(settings));
+    }
+
+    if((<HTMLInputElement>document.getElementById("library-owner")).value.trim() != "") {
+        settings.libraryOwner = (<HTMLInputElement>document.getElementById("library-owner")).value.trim();
+        document.getElementById("library-owner-text").innerText = settings.libraryOwner;
+        settings.libraryOwnerShow = true;
+        localStorage.setItem("settings", JSON.stringify(settings));
+    }
+    else {
+        delete settings.libraryOwner;
+        document.getElementById("library-owner-text").innerText = "Create a custom library";
+        settings.libraryOwnerShow = false;
+        localStorage.setItem("settings", JSON.stringify(settings));
     }
 });

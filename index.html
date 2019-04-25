@@ -25,7 +25,7 @@
 
     <body onload="onLoadSet()">
 
-        <div class="jumbotron text-center">
+        <div class="jumbotron text-center" id="jumbotron">
             <h1 id="library-name-text">Online Library</h1>
             <small id="library-owner-text">Create a custom library</small>
 
@@ -104,11 +104,25 @@
                     <div class="row m-3 mb-5">
                         <label class="col" for="library-name">Library Name:</label>
                         <input type="text" id="library-name" class="col">
+                        <span class="col-1 text-danger font-weight-bold" id="delete-library-name" title="Delete Library Name">X</span>
                     </div>
 
                     <div class="row m-3 mb-5">
                         <label class="col" for="library-owner">Library Owner:</label>
                         <input type="text" id="library-owner" class="col">
+                        <span class="col-1 text-danger font-weight-bold" id="delete-library-owner" title="Delete Library Owner">X</span>
+                    </div>
+
+                    <div class="m-3 mb-5">
+                        <span>Heading Color</span>
+
+                        <span class="dropdown" id="dropdown-heading">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" id="background-color-heading-button"></button>
+                            <div class="dropdown-menu">
+                              <a class="dropdown-item" href="#" onclick="document.getElementById('background-color-heading-button').innerText = this.innerText.trim();">Light Grey <span class="badge border border-dark" id="aligned-right" style="background-color: rgb(231, 231, 231)">&nbsp; &nbsp; &nbsp; &nbsp;</span></a>
+                              <a class="dropdown-item" href="#" onclick="document.getElementById('background-color-heading-button').innerText = this.innerText.trim();">Grey <span class="badge border border-dark" id="aligned-right" style="background-color: rgb(201, 201, 201)">&nbsp; &nbsp; &nbsp; &nbsp;</span></a>
+                            </div>
+                        </span>
                     </div>
 
                     <div class="m-3 mb-5">
@@ -124,16 +138,22 @@
                         </span>
                     </div>
 
-                    <div class="m-3">
+                    <div class="m-3 mb-5">
                         <span>Delete all books</span>
 
                         <button type="button" class="btn btn-danger" id="delete-all-books-button" style="position: absolute; right: 25px;" title="This will delete your whole library">Delete</button>
                     </div>
 
+                    <div class="m-3">
+                        <span>Delete all data</span>
+
+                        <button type="button" class="btn btn-danger" id="delete-all-data-button" style="position: absolute; right: 25px;" title="This will delete your whole library and all your settings">Delete</button>
+                    </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="save-settings" data-dismiss="modal">Save changes</button>
+                    <button type="button" class="btn btn-success" id="save-settings" data-dismiss="modal">Save changes</button>
                 </div>
             </div>
             </div>
