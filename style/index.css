@@ -1,4 +1,4 @@
-.jumbotron {
+jumbotron {
     background-color: rgb(231, 231, 231);
 }
 
@@ -99,11 +99,28 @@
 
 #aligned-right {
     position: absolute;
-    margin-top: 1px;
+    margin-top: 3px;
     right: 15px;
 }
 
-#delete-library-name, #delete-library-owner {
+.color-show-dropdown {
+    width: 2.8em;
+    height: 1.7em;
+}
+
+.carpet-image-background {
+    background: url("../images/carpet-background.jpg");
+    background-repeat: no-repeat;
+    background-size: auto;
+}
+
+.wood-image-background {
+    background: url("../images/wood-background.jpg");
+    background-repeat: no-repeat;
+    background-size: auto;
+}
+
+#delete-library-name, #delete-library-owner, #delete-book-author, #delete-book-genre, #delete-book-ddc {
     margin-top: 4px;
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -113,6 +130,10 @@
     display: none;
 }
 
-#delete-library-name:hover, #delete-library-owner:hover {
+#delete-library-name:hover, #delete-library-owner:hover, #delete-book-author:hover, #delete-book-genre:hover, #delete-book-ddc:hover {
     cursor: pointer;
+}
+
+#delete-book-author, #delete-book-genre, #delete-book-ddc {
+    display: inline !important;
 }

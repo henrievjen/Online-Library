@@ -36,6 +36,8 @@ class Book {
         let closeButtonDiv = document.createElement("section");
         closeButtonDiv.setAttribute("id", "delete-book-div");
         closeButtonDiv.setAttribute("class", "bg-primary");
+        closeButtonDiv.setAttribute("data-toggle", "modal");
+        closeButtonDiv.setAttribute("data-target", "#book-info-modal");
         book.appendChild(closeButtonDiv);
         let closeButton = document.createElement("section");
         closeButton.setAttribute("title", "Delete Book");
@@ -59,6 +61,7 @@ class Book {
 }
 // Array containing all books, held in localStorage
 let allBooks = [];
+let selectedBook = undefined;
 // Settings Object
 let settings = undefined;
 let setBgColorHead = (bgColor) => {
@@ -74,13 +77,33 @@ let setBgColorHead = (bgColor) => {
 let setBgColor = (bgColor) => {
     switch (bgColor) {
         case "White":
+            if (document.body.style.backgroundImage) {
+                document.body.style.background = "none";
+                document.getElementsByClassName("add-book-div")[0].style.borderColor = "#aaa";
+            }
             document.body.style.backgroundColor = "rgb(255, 255, 255)";
             break;
         case "Grey":
+            if (document.body.style.backgroundImage) {
+                document.body.style.background = "none";
+                document.getElementsByClassName("add-book-div")[0].style.borderColor = "#aaa";
+            }
             document.body.style.backgroundColor = "rgb(220, 219, 226)";
             break;
         case "Light Blue":
+            if (document.body.style.backgroundImage) {
+                document.body.style.background = "none";
+                document.getElementsByClassName("add-book-div")[0].style.borderColor = "#aaa";
+            }
             document.body.style.backgroundColor = "rgb(236, 244, 255)";
+            break;
+        case "Carpet":
+            document.body.style.backgroundImage = "url('images/carpet-background.jpg";
+            document.getElementsByClassName("add-book-div")[0].style.borderColor = "#fff";
+            break;
+        case "Wood":
+            document.body.style.backgroundImage = "url('images/wood-background.jpg";
+            document.getElementsByClassName("add-book-div")[0].style.borderColor = "#fff";
             break;
     }
 };
@@ -90,8 +113,8 @@ let deleter = (num) => {
 };
 let frontCoverVisual = document.getElementById("front-cover-visual");
 let backCoverVisual = document.getElementById("back-cover-visual");
-let frontCoverSrc;
-let backCoverSrc;
+let frontCoverSrc = undefined;
+let backCoverSrc = undefined;
 frontCoverVisual.addEventListener('click', () => {
     document.getElementById("front-cover").click();
 });
@@ -138,6 +161,55 @@ document.addEventListener('click', (event) => {
             }
         }
     }
+    // When click on a book
+    if (event.target.id == "delete-book-div") {
+        let times = document.createElement("span");
+        times.innerHTML = "&times;";
+        let textId = event.target.parentElement.id;
+        let textIdText = document.getElementById(textId).innerText;
+        if (textIdText == times.innerHTML) {
+            textIdText = document.getElementById(textId).title;
+        }
+        let title = textIdText.substring(7, textIdText.indexOf("Author: ")).trim();
+        document.getElementById("book-info-modal-label").innerText = title;
+        selectedBook = event.target.parentElement.id;
+        if (textIdText.indexOf("Genre: ") == -1) {
+            let author = undefined;
+            if (textIdText.endsWith(times.innerHTML)) {
+                author = textIdText.substring(document.getElementById("book-info-modal-label").innerText.length + 16, textIdText.length - 1).trim();
+            }
+            else {
+                author = textIdText.substring(document.getElementById("book-info-modal-label").innerText.length + 16).trim();
+            }
+            document.getElementById("modal-author").value = author;
+            document.getElementById("modal-genre").value = "";
+        }
+        else {
+            let author = textIdText.substring(document.getElementById("book-info-modal-label").innerText.length + 16, textIdText.indexOf("Genre: ")).trim();
+            ;
+            let genre = undefined;
+            if (textIdText.endsWith(times.innerHTML)) {
+                genre = textIdText.substring(title.length + author.length + 23, textIdText.length - 1).trim();
+            }
+            else {
+                genre = textIdText.substring(title.length + author.length + 23).trim();
+            }
+            document.getElementById("modal-author").value = author;
+            document.getElementById("modal-genre").value = genre;
+        }
+    }
+});
+// Clear Book Author
+document.getElementById("delete-book-author").addEventListener('click', () => {
+    document.getElementById("modal-author").value = "";
+});
+// Clear Book Genre
+document.getElementById("delete-book-genre").addEventListener('click', () => {
+    document.getElementById("modal-genre").value = "";
+});
+// Clear Book DDC
+document.getElementById("delete-book-ddc").addEventListener('click', () => {
+    document.getElementById("modal-ddc").value = "";
 });
 $('#settings-modal').on('hidden.bs.modal', () => {
     // Clear library name value
@@ -231,6 +303,29 @@ document.getElementById("save-settings").addEventListener('click', () => {
         document.getElementById("library-owner-text").innerText = "Create a custom library";
         settings.libraryOwnerShow = false;
         localStorage.setItem("settings", JSON.stringify(settings));
+    }
+});
+// Save Book
+document.getElementById("save-book").addEventListener('click', (event) => {
+    // Author value required
+    if (document.getElementById("modal-author").value.trim() != "") {
+        document.getElementById("save-book").setAttribute("data-dismiss", "modal");
+        document.getElementById("modal-author").style.borderColor = "inherit";
+        allBooks[selectedBook].author = document.getElementById("modal-author").value.trim();
+        allBooks[selectedBook].genre = document.getElementById("modal-genre").value.trim();
+        allBooks[selectedBook].ddc = document.getElementById("modal-ddc").value.trim();
+        if (allBooks[selectedBook].genre) {
+            document.getElementById(selectedBook).innerHTML = "Title: " + allBooks[selectedBook].title + "<br>" + "Author: " + allBooks[selectedBook].author + "<br>" + "Genre: " + allBooks[selectedBook].genre + "<section id='delete-book-div' class='bg-primary' data-toggle='modal' data-target='#book-info-modal'></section>" + "<section title='Delete Book' id='delete-book' class='text-center text-white'>×</section>";
+        }
+        else {
+            document.getElementById(selectedBook).innerHTML = "Title: " + allBooks[selectedBook].title + "<br>" + "Author: " + allBooks[selectedBook].author + "<section id='delete-book-div' class='bg-primary' data-toggle='modal' data-target='#book-info-modal'></section>" + "<section title='Delete Book' id='delete-book' class='text-center text-white'>×</section>";
+        }
+        localStorage.setItem("books", JSON.stringify(allBooks));
+    }
+    else {
+        document.getElementById("save-book").removeAttribute("data-dismiss");
+        document.getElementById("modal-author").style.borderColor = "#f00";
+        selectedBook = undefined;
     }
 });
 let onLoadSet = () => {

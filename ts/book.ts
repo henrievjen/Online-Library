@@ -1,7 +1,7 @@
 class Book {
     private title: string;
-    private author: string;
-    private genre: string;
+    public author: string;
+    public genre: string;
     private frontCoverSrc: string;
     private backCoverSrc: string;
 
@@ -43,10 +43,12 @@ class Book {
                 book.append("\n" + "Genre: " + this.genre);
             }
         }
-
+        
         let closeButtonDiv = document.createElement("section");
         closeButtonDiv.setAttribute("id", "delete-book-div");
         closeButtonDiv.setAttribute("class", "bg-primary");
+        closeButtonDiv.setAttribute("data-toggle", "modal");
+        closeButtonDiv.setAttribute("data-target", "#book-info-modal");
         book.appendChild(closeButtonDiv);
 
         let closeButton = document.createElement("section");

@@ -119,8 +119,8 @@
                         <span class="dropdown" id="dropdown-heading">
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" id="background-color-heading-button"></button>
                             <div class="dropdown-menu">
-                              <a class="dropdown-item" href="#" onclick="document.getElementById('background-color-heading-button').innerText = this.innerText.trim();">Light Grey <span class="badge border border-dark" id="aligned-right" style="background-color: rgb(231, 231, 231)">&nbsp; &nbsp; &nbsp; &nbsp;</span></a>
-                              <a class="dropdown-item" href="#" onclick="document.getElementById('background-color-heading-button').innerText = this.innerText.trim();">Grey <span class="badge border border-dark" id="aligned-right" style="background-color: rgb(201, 201, 201)">&nbsp; &nbsp; &nbsp; &nbsp;</span></a>
+                              <a class="dropdown-item" href="#" onclick="document.getElementById('background-color-heading-button').innerText = this.innerText.trim();">Light Grey <span class="badge border border-dark color-show-dropdown" id="aligned-right" style="background-color: rgb(231, 231, 231)">&nbsp;</span></a>
+                              <a class="dropdown-item" href="#" onclick="document.getElementById('background-color-heading-button').innerText = this.innerText.trim();">Grey <span class="badge border border-dark color-show-dropdown" id="aligned-right" style="background-color: rgb(201, 201, 201)">&nbsp;</span></a>
                             </div>
                         </span>
                     </div>
@@ -131,9 +131,11 @@
                         <span class="dropdown" id="dropdown">
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" id="background-color-button"></button>
                             <div class="dropdown-menu">
-                              <a class="dropdown-item" href="#" onclick="document.getElementById('background-color-button').innerText = this.innerText.trim();">White <span class="badge border border-dark" id="aligned-right" style="background-color: rgb(255, 255, 255)">&nbsp; &nbsp; &nbsp; &nbsp;</span></a>
-                              <a class="dropdown-item" href="#" onclick="document.getElementById('background-color-button').innerText = this.innerText.trim();">Grey <span class="badge border border-dark" id="aligned-right" style="background-color: rgb(220, 219, 226)">&nbsp; &nbsp; &nbsp; &nbsp;</span></a>
-                              <a class="dropdown-item" href="#" onclick="document.getElementById('background-color-button').innerText = this.innerText.trim();">Light Blue <span class="badge border border-dark" id="aligned-right" style="background-color: rgb(236, 244, 255)">&nbsp; &nbsp; &nbsp; &nbsp;</span></a>
+                              <a class="dropdown-item" href="#" onclick="document.getElementById('background-color-button').innerText = this.innerText.trim();">White <span class="badge border border-dark color-show-dropdown" id="aligned-right" style="background-color: rgb(255, 255, 255)">&nbsp;</span></a>
+                              <a class="dropdown-item" href="#" onclick="document.getElementById('background-color-button').innerText = this.innerText.trim();">Grey <span class="badge border border-dark color-show-dropdown" id="aligned-right" style="background-color: rgb(220, 219, 226)">&nbsp;</span></a>
+                              <a class="dropdown-item" href="#" onclick="document.getElementById('background-color-button').innerText = this.innerText.trim();">Light Blue <span class="badge border border-dark color-show-dropdown" id="aligned-right" style="background-color: rgb(236, 244, 255)">&nbsp;</span></a>
+                              <a class="dropdown-item" href="#" onclick="document.getElementById('background-color-button').innerText = this.innerText.trim();">Carpet <span class="badge border border-dark color-show-dropdown carpet-image-background" id="aligned-right">&nbsp;</span></a>
+                              <a class="dropdown-item" href="#" onclick="document.getElementById('background-color-button').innerText = this.innerText.trim();">Wood <span class="badge border border-dark color-show-dropdown wood-image-background" id="aligned-right">&nbsp;</span></a>
                             </div>
                         </span>
                     </div>
@@ -154,6 +156,46 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-success" id="save-settings" data-dismiss="modal">Save changes</button>
+                </div>
+            </div>
+            </div>
+        </div>
+
+
+        <!-- Book Info Modal -->
+        <div class="modal fade" id="book-info-modal" tabindex="-1" role="dialog" aria-labelledby="book-info-modal-label" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="book-info-modal-label"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">x</span>
+                </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row m-3 mb-5">
+                        <label class="col" for="modal-author">Author:</label>
+                        <input type="text" id="modal-author" class="col">
+                        <span class="col-1 text-danger font-weight-bold" id="delete-book-author" title="Delete Book Author">X</span>
+                    </div>
+
+                    <div class="row m-3 mb-5">
+                        <label class="col" for="modal-genre">Genre:</label>
+                        <input type="text" id="modal-genre" class="col">
+                        <span class="col-1 text-danger font-weight-bold" id="delete-book-genre" title="Delete Book Genre">X</span>
+                    </div>
+
+                    <div class="row m-3">
+                        <label class="col" for="modal-ddc" title="Dewey Decimal System Classification Number">DDC Number: <a href="https://en.wikipedia.org/wiki/Dewey_Decimal_Classification" target="_blank"><span class="badge badge-primary rounded-circle">i</span></a></label>
+                        <input type="text" id="modal-ddc" class="col">
+                        <span class="col-1 text-danger font-weight-bold" id="delete-book-ddc" title="Delete Book DDC Number">X</span>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="save-book">Save changes</button>
                 </div>
             </div>
             </div>
