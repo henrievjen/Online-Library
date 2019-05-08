@@ -6,6 +6,8 @@ let selectedBook: string = undefined;
 // Settings Object
 let settings = undefined;
 
+let hasCover: Boolean = undefined;
+
 let setBgColorHead = (bgColor: string): void => {
     switch(bgColor) {
         case "Light Grey":
@@ -89,14 +91,14 @@ document.getElementById("add-book-form").addEventListener('submit', (event): voi
     book.visualConstruct();
 
     if(frontCoverSrc) {
-        (<HTMLElement>document.getElementById("front-cover-visual").children[0]).style.display = "block";
-        (<HTMLElement>document.getElementById("front-cover-visual").children[1]).style.display = "block";
-        (<HTMLElement>document.getElementById("front-cover-visual")).removeChild((<HTMLElement>document.getElementById("front-cover-visual").children[2]));
+        (<HTMLElement>frontCoverVisual.children[0]).style.display = "block";
+        (<HTMLElement>frontCoverVisual.children[1]).style.display = "block";
+        (<HTMLElement>frontCoverVisual).removeChild((<HTMLElement>frontCoverVisual.children[2]));
     }
     if(backCoverSrc) {
-        (<HTMLElement>document.getElementById("back-cover-visual").children[0]).style.display = "block";
-        (<HTMLElement>document.getElementById("back-cover-visual").children[1]).style.display = "block";
-        (<HTMLElement>document.getElementById("back-cover-visual")).removeChild((<HTMLElement>document.getElementById("back-cover-visual").children[2]));
+        (<HTMLElement>backCoverVisual.children[0]).style.display = "block";
+        (<HTMLElement>backCoverVisual.children[1]).style.display = "block";
+        (<HTMLElement>backCoverVisual).removeChild((<HTMLElement>backCoverVisual.children[2]));
     }
 
     frontCoverSrc = undefined;
@@ -166,7 +168,41 @@ document.addEventListener('click', (event) => {
             
             (<HTMLInputElement>document.getElementById("modal-author")).value = author;
             (<HTMLInputElement>document.getElementById("modal-genre")).value = genre;
+        }
 
+        if(allBooks[selectedBook].ddc) {
+            (<HTMLInputElement>document.getElementById("modal-ddc")).value = allBooks[selectedBook].ddc;
+        }
+        else {
+            (<HTMLInputElement>document.getElementById("modal-ddc")).value = "";
+        }
+
+        if(allBooks[selectedBook].frontCoverSrc) {
+            hasCover = true;
+
+            (<HTMLElement>document.getElementById("front-cover-visual-book").children[0]).style.display = "none";
+            (<HTMLElement>document.getElementById("front-cover-visual-book").children[1]).style.display = "none";
+
+            let picture = document.createElement("img");
+            picture.setAttribute("id", "book-cover-image");
+            picture.src = allBooks[selectedBook].frontCoverSrc;
+            document.getElementById("front-cover-visual-book").appendChild(picture);
+        }
+
+        if(allBooks[selectedBook].backCoverSrc) {
+            hasCover = true;
+
+            (<HTMLElement>document.getElementById("back-cover-visual-book").children[0]).style.display = "none";
+            (<HTMLElement>document.getElementById("back-cover-visual-book").children[1]).style.display = "none";
+
+            let picture = document.createElement("img");
+            picture.setAttribute("id", "book-cover-image");
+            picture.src = allBooks[selectedBook].backCoverSrc;
+            document.getElementById("back-cover-visual-book").appendChild(picture);
+        }
+
+        if(!(allBooks[selectedBook].frontCoverSrc || allBooks[selectedBook].backCoverSrc)) {
+            hasCover = false;
         }
     }
 });
@@ -314,11 +350,37 @@ document.getElementById("save-book").addEventListener('click', (event) => {
         allBooks[selectedBook].genre = (<HTMLInputElement>document.getElementById("modal-genre")).value.trim();
         allBooks[selectedBook].ddc = (<HTMLInputElement>document.getElementById("modal-ddc")).value.trim();
         
-        if(allBooks[selectedBook].genre) {
-            document.getElementById(selectedBook).innerHTML = "Title: " + allBooks[selectedBook].title + "<br>" + "Author: " + allBooks[selectedBook].author + "<br>" + "Genre: " + allBooks[selectedBook].genre + "<section id='delete-book-div' class='bg-primary' data-toggle='modal' data-target='#book-info-modal'></section>" + "<section title='Delete Book' id='delete-book' class='text-center text-white'>×</section>";
+        if(allBooks[selectedBook].frontCoverSrc || allBooks[selectedBook].frontCoverSrc) {
+            if(allBooks[selectedBook].genre) {
+                (<HTMLElement>document.getElementById("all-books")).children[selectedBook].title = "Title: " + allBooks[selectedBook].title + "\n" + "Author: " + allBooks[selectedBook].author + "\n" + "Genre: " + allBooks[selectedBook].genre;
+            }
+            else {
+                (<HTMLElement>document.getElementById("all-books")).children[selectedBook].title = "Title: " + allBooks[selectedBook].title + "\n" + "Author: " + allBooks[selectedBook].author;
+            }  
         }
         else {
-            document.getElementById(selectedBook).innerHTML = "Title: " + allBooks[selectedBook].title + "<br>" + "Author: " + allBooks[selectedBook].author + "<section id='delete-book-div' class='bg-primary' data-toggle='modal' data-target='#book-info-modal'></section>" + "<section title='Delete Book' id='delete-book' class='text-center text-white'>×</section>";
+            if(allBooks[selectedBook].genre) {
+                document.getElementById(selectedBook).innerHTML = "Title: " + allBooks[selectedBook].title + "<br>" + "Author: " + allBooks[selectedBook].author + "<br>" + "Genre: " + allBooks[selectedBook].genre + "<section id='delete-book-div' class='bg-primary' data-toggle='modal' data-target='#book-info-modal'></section>" + "<section title='Delete Book' id='delete-book' class='text-center text-white'>×</section>";
+            }
+            else {
+                document.getElementById(selectedBook).innerHTML = "Title: " + allBooks[selectedBook].title + "<br>" + "Author: " + allBooks[selectedBook].author + "<section id='delete-book-div' class='bg-primary' data-toggle='modal' data-target='#book-info-modal'></section>" + "<section title='Delete Book' id='delete-book' class='text-center text-white'>×</section>";
+            }   
+        }
+
+        // Adds front or back cover to book without cover
+        if(hasCover === false && (frontCoverSrc || backCoverSrc)) {
+            if(frontCoverSrc) {
+                allBooks[selectedBook].frontCoverSrc = frontCoverSrc;
+            }
+
+            if(backCoverSrc) {
+                allBooks[selectedBook].backCoverSrc = backCoverSrc;
+            }
+
+            allBooks[selectedBook].visualConstruct();
+
+            document.getElementById("all-books").removeChild(document.getElementById("all-books").children[parseInt(selectedBook)]);
+            document.getElementById("all-books").children[selectedBook].id = selectedBook;
         }
 
         localStorage.setItem("books", JSON.stringify(allBooks))
@@ -329,4 +391,31 @@ document.getElementById("save-book").addEventListener('click', (event) => {
         selectedBook = undefined;
     }
 
+});
+
+$('#book-info-modal').on('hidden.bs.modal', () => {
+    (<HTMLElement>document.getElementById("front-cover-visual-book").children[0]).style.display = "block";
+    (<HTMLElement>document.getElementById("front-cover-visual-book").children[1]).style.display = "block";
+
+    (<HTMLElement>document.getElementById("back-cover-visual-book").children[0]).style.display = "block";
+    (<HTMLElement>document.getElementById("back-cover-visual-book").children[1]).style.display = "block";
+
+    if(document.getElementById("front-cover-visual-book").children[2]) {
+        document.getElementById("front-cover-visual-book").removeChild(document.getElementById("front-cover-visual-book").children[2]);
+    }
+
+    if(document.getElementById("back-cover-visual-book").children[2]) {
+        document.getElementById("back-cover-visual-book").removeChild(document.getElementById("back-cover-visual-book").children[2]);
+    }
+
+    frontCoverSrc = undefined;
+    backCoverSrc = undefined;
+});
+
+document.getElementById("front-cover-visual-book").addEventListener("click", () => {
+    document.getElementById("front-cover-book").click();
+});
+
+document.getElementById("back-cover-visual-book").addEventListener("click", () => {
+    document.getElementById("back-cover-book").click();
 });

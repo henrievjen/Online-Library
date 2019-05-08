@@ -64,6 +64,7 @@ let allBooks = [];
 let selectedBook = undefined;
 // Settings Object
 let settings = undefined;
+let hasCover = undefined;
 let setBgColorHead = (bgColor) => {
     switch (bgColor) {
         case "Light Grey":
@@ -133,14 +134,14 @@ document.getElementById("add-book-form").addEventListener('submit', (event) => {
     document.getElementById("genre").value = "";
     book.visualConstruct();
     if (frontCoverSrc) {
-        document.getElementById("front-cover-visual").children[0].style.display = "block";
-        document.getElementById("front-cover-visual").children[1].style.display = "block";
-        document.getElementById("front-cover-visual").removeChild(document.getElementById("front-cover-visual").children[2]);
+        frontCoverVisual.children[0].style.display = "block";
+        frontCoverVisual.children[1].style.display = "block";
+        frontCoverVisual.removeChild(frontCoverVisual.children[2]);
     }
     if (backCoverSrc) {
-        document.getElementById("back-cover-visual").children[0].style.display = "block";
-        document.getElementById("back-cover-visual").children[1].style.display = "block";
-        document.getElementById("back-cover-visual").removeChild(document.getElementById("back-cover-visual").children[2]);
+        backCoverVisual.children[0].style.display = "block";
+        backCoverVisual.children[1].style.display = "block";
+        backCoverVisual.removeChild(backCoverVisual.children[2]);
     }
     frontCoverSrc = undefined;
     backCoverSrc = undefined;
@@ -196,6 +197,33 @@ document.addEventListener('click', (event) => {
             }
             document.getElementById("modal-author").value = author;
             document.getElementById("modal-genre").value = genre;
+        }
+        if (allBooks[selectedBook].ddc) {
+            document.getElementById("modal-ddc").value = allBooks[selectedBook].ddc;
+        }
+        else {
+            document.getElementById("modal-ddc").value = "";
+        }
+        if (allBooks[selectedBook].frontCoverSrc) {
+            hasCover = true;
+            document.getElementById("front-cover-visual-book").children[0].style.display = "none";
+            document.getElementById("front-cover-visual-book").children[1].style.display = "none";
+            let picture = document.createElement("img");
+            picture.setAttribute("id", "book-cover-image");
+            picture.src = allBooks[selectedBook].frontCoverSrc;
+            document.getElementById("front-cover-visual-book").appendChild(picture);
+        }
+        if (allBooks[selectedBook].backCoverSrc) {
+            hasCover = true;
+            document.getElementById("back-cover-visual-book").children[0].style.display = "none";
+            document.getElementById("back-cover-visual-book").children[1].style.display = "none";
+            let picture = document.createElement("img");
+            picture.setAttribute("id", "book-cover-image");
+            picture.src = allBooks[selectedBook].backCoverSrc;
+            document.getElementById("back-cover-visual-book").appendChild(picture);
+        }
+        if (!(allBooks[selectedBook].frontCoverSrc || allBooks[selectedBook].backCoverSrc)) {
+            hasCover = false;
         }
     }
 });
@@ -314,11 +342,33 @@ document.getElementById("save-book").addEventListener('click', (event) => {
         allBooks[selectedBook].author = document.getElementById("modal-author").value.trim();
         allBooks[selectedBook].genre = document.getElementById("modal-genre").value.trim();
         allBooks[selectedBook].ddc = document.getElementById("modal-ddc").value.trim();
-        if (allBooks[selectedBook].genre) {
-            document.getElementById(selectedBook).innerHTML = "Title: " + allBooks[selectedBook].title + "<br>" + "Author: " + allBooks[selectedBook].author + "<br>" + "Genre: " + allBooks[selectedBook].genre + "<section id='delete-book-div' class='bg-primary' data-toggle='modal' data-target='#book-info-modal'></section>" + "<section title='Delete Book' id='delete-book' class='text-center text-white'>×</section>";
+        if (allBooks[selectedBook].frontCoverSrc || allBooks[selectedBook].frontCoverSrc) {
+            if (allBooks[selectedBook].genre) {
+                document.getElementById("all-books").children[selectedBook].title = "Title: " + allBooks[selectedBook].title + "\n" + "Author: " + allBooks[selectedBook].author + "\n" + "Genre: " + allBooks[selectedBook].genre;
+            }
+            else {
+                document.getElementById("all-books").children[selectedBook].title = "Title: " + allBooks[selectedBook].title + "\n" + "Author: " + allBooks[selectedBook].author;
+            }
         }
         else {
-            document.getElementById(selectedBook).innerHTML = "Title: " + allBooks[selectedBook].title + "<br>" + "Author: " + allBooks[selectedBook].author + "<section id='delete-book-div' class='bg-primary' data-toggle='modal' data-target='#book-info-modal'></section>" + "<section title='Delete Book' id='delete-book' class='text-center text-white'>×</section>";
+            if (allBooks[selectedBook].genre) {
+                document.getElementById(selectedBook).innerHTML = "Title: " + allBooks[selectedBook].title + "<br>" + "Author: " + allBooks[selectedBook].author + "<br>" + "Genre: " + allBooks[selectedBook].genre + "<section id='delete-book-div' class='bg-primary' data-toggle='modal' data-target='#book-info-modal'></section>" + "<section title='Delete Book' id='delete-book' class='text-center text-white'>×</section>";
+            }
+            else {
+                document.getElementById(selectedBook).innerHTML = "Title: " + allBooks[selectedBook].title + "<br>" + "Author: " + allBooks[selectedBook].author + "<section id='delete-book-div' class='bg-primary' data-toggle='modal' data-target='#book-info-modal'></section>" + "<section title='Delete Book' id='delete-book' class='text-center text-white'>×</section>";
+            }
+        }
+        // Adds front or back cover to book without cover
+        if (hasCover === false && (frontCoverSrc || backCoverSrc)) {
+            if (frontCoverSrc) {
+                allBooks[selectedBook].frontCoverSrc = frontCoverSrc;
+            }
+            if (backCoverSrc) {
+                allBooks[selectedBook].backCoverSrc = backCoverSrc;
+            }
+            allBooks[selectedBook].visualConstruct();
+            document.getElementById("all-books").removeChild(document.getElementById("all-books").children[parseInt(selectedBook)]);
+            document.getElementById("all-books").children[selectedBook].id = selectedBook;
         }
         localStorage.setItem("books", JSON.stringify(allBooks));
     }
@@ -327,6 +377,26 @@ document.getElementById("save-book").addEventListener('click', (event) => {
         document.getElementById("modal-author").style.borderColor = "#f00";
         selectedBook = undefined;
     }
+});
+$('#book-info-modal').on('hidden.bs.modal', () => {
+    document.getElementById("front-cover-visual-book").children[0].style.display = "block";
+    document.getElementById("front-cover-visual-book").children[1].style.display = "block";
+    document.getElementById("back-cover-visual-book").children[0].style.display = "block";
+    document.getElementById("back-cover-visual-book").children[1].style.display = "block";
+    if (document.getElementById("front-cover-visual-book").children[2]) {
+        document.getElementById("front-cover-visual-book").removeChild(document.getElementById("front-cover-visual-book").children[2]);
+    }
+    if (document.getElementById("back-cover-visual-book").children[2]) {
+        document.getElementById("back-cover-visual-book").removeChild(document.getElementById("back-cover-visual-book").children[2]);
+    }
+    frontCoverSrc = undefined;
+    backCoverSrc = undefined;
+});
+document.getElementById("front-cover-visual-book").addEventListener("click", () => {
+    document.getElementById("front-cover-book").click();
+});
+document.getElementById("back-cover-visual-book").addEventListener("click", () => {
+    document.getElementById("back-cover-book").click();
 });
 let onLoadSet = () => {
     allBooks = JSON.parse(localStorage.getItem("books"));
@@ -435,6 +505,42 @@ let readImageBack = (input) => {
     }
     if (document.getElementById("back-cover-visual").children[2]) {
         document.getElementById("back-cover-visual").removeChild(document.getElementById("back-cover-visual").children[2]);
+    }
+};
+let readImageFrontBook = (input) => {
+    if (input.files && input.files[0]) {
+        let reader = new FileReader();
+        reader.onload = (e) => {
+            document.getElementById("front-cover-visual-book").children[0].style.display = "none";
+            document.getElementById("front-cover-visual-book").children[1].style.display = "none";
+            let picture = document.createElement("img");
+            picture.setAttribute("id", "book-cover-image");
+            picture.src = e.target.result;
+            document.getElementById("front-cover-visual-book").appendChild(picture);
+            frontCoverSrc = e.target.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+    if (document.getElementById("front-cover-visual-book").children[2]) {
+        document.getElementById("front-cover-visual-book").removeChild(document.getElementById("front-cover-visual-book").children[2]);
+    }
+};
+let readImageBackBook = (input) => {
+    if (input.files && input.files[0]) {
+        let reader = new FileReader();
+        reader.onload = (e) => {
+            document.getElementById("back-cover-visual-book").children[0].style.display = "none";
+            document.getElementById("back-cover-visual-book").children[1].style.display = "none";
+            let picture = document.createElement("img");
+            picture.setAttribute("id", "book-cover-image");
+            picture.src = e.target.result;
+            document.getElementById("back-cover-visual-book").appendChild(picture);
+            backCoverSrc = e.target.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+    if (document.getElementById("back-cover-visual-book").children[2]) {
+        document.getElementById("back-cover-visual-book").removeChild(document.getElementById("back-cover-visual-book").children[2]);
     }
 };
 //# sourceMappingURL=index.js.map

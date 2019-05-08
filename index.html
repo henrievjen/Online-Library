@@ -56,13 +56,11 @@
 
                 <!-- Front Cover Image -->
                 <div class="form-group d-none">
-                    <label for="front-cover">Front Cover:</label>
                     <input class="form-control-file" id="front-cover" type="file" onchange="readImageFront(this);">
                 </div>
 
                 <!-- Back Cover Image -->
                 <div class="form-group d-none">
-                    <label for="back-cover">Back Cover:</label>
                     <input class="form-control-file" id="back-cover" type="file" onchange="readImageBack(this);">
                 </div>
 
@@ -174,25 +172,52 @@
                 </div>
                 <div class="modal-body">
 
+                    <!-- Author -->
                     <div class="row m-3 mb-5">
                         <label class="col" for="modal-author">Author:</label>
                         <input type="text" id="modal-author" class="col">
                         <span class="col-1 text-danger font-weight-bold" id="delete-book-author" title="Delete Book Author">X</span>
                     </div>
 
+                    <!-- Genre -->
                     <div class="row m-3 mb-5">
                         <label class="col" for="modal-genre">Genre:</label>
                         <input type="text" id="modal-genre" class="col">
                         <span class="col-1 text-danger font-weight-bold" id="delete-book-genre" title="Delete Book Genre">X</span>
                     </div>
 
-                    <div class="row m-3">
+                    <!-- DDC -->
+                    <div class="row m-3 mb-5">
                         <label class="col" for="modal-ddc" title="Dewey Decimal System Classification Number">DDC Number: <a href="https://en.wikipedia.org/wiki/Dewey_Decimal_Classification" target="_blank"><span class="badge badge-primary rounded-circle">i</span></a></label>
                         <input type="text" id="modal-ddc" class="col">
                         <span class="col-1 text-danger font-weight-bold" id="delete-book-ddc" title="Delete Book DDC Number">X</span>
                     </div>
 
+                    <!-- Add Cover Visual -->
+                    <div class="row cover-parent ml-4">
+                        <div class="border border-primary text-center mr-3 mb-3 p-2 overflow-hidden" id="front-cover-visual-book">
+                            <span>Add Front Cover Image</span>
+                            <img class="w-100" src="images/plus-symbol.png">
+                        </div>
+    
+                        <div class="border border-primary text-center mb-3 p-2 overflow-hidden" id="back-cover-visual-book">
+                            <span>Add Back Cover Image</span>
+                            <img class="w-100" src="images/plus-symbol.png">
+                        </div>
+                    </div>
+
+                    <!-- Front Cover Image -->
+                    <div class="form-group d-none">
+                        <input id="front-cover-book" type="file" onchange="readImageFrontBook(this);">
+                    </div>
+
+                    <!-- Back Cover Image -->
+                    <div class="form-group d-none">
+                        <input id="back-cover-book" type="file" onchange="readImageBackBook(this);">
+                    </div>
+
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-success" id="save-book">Save changes</button>

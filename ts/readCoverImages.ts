@@ -43,3 +43,49 @@ let readImageBack = (input) => {
         (<HTMLElement>document.getElementById("back-cover-visual")).removeChild((<HTMLElement>document.getElementById("back-cover-visual").children[2]));
     }
 };
+
+let readImageFrontBook = (input) => {
+    if (input.files && input.files[0]) {
+        let reader: any = new FileReader();
+
+        reader.onload = (e) => {
+            (<HTMLElement>document.getElementById("front-cover-visual-book").children[0]).style.display = "none";
+            (<HTMLElement>document.getElementById("front-cover-visual-book").children[1]).style.display = "none";
+
+            let picture = document.createElement("img");
+            picture.setAttribute("id", "book-cover-image");
+            picture.src = e.target.result;
+            document.getElementById("front-cover-visual-book").appendChild(picture);
+            frontCoverSrc = e.target.result;
+        };
+
+        reader.readAsDataURL(input.files[0]);
+    }
+
+    if((<HTMLElement>document.getElementById("front-cover-visual-book").children[2])) {
+        (<HTMLElement>document.getElementById("front-cover-visual-book")).removeChild((<HTMLElement>document.getElementById("front-cover-visual-book").children[2]));
+    }
+};
+
+let readImageBackBook = (input) => {
+    if (input.files && input.files[0]) {
+        let reader: any = new FileReader();
+
+        reader.onload = (e) => {
+            (<HTMLElement>document.getElementById("back-cover-visual-book").children[0]).style.display = "none";
+            (<HTMLElement>document.getElementById("back-cover-visual-book").children[1]).style.display = "none";
+
+            let picture = document.createElement("img");
+            picture.setAttribute("id", "book-cover-image");
+            picture.src = e.target.result;
+            document.getElementById("back-cover-visual-book").appendChild(picture);
+            backCoverSrc = e.target.result;
+        };
+
+        reader.readAsDataURL(input.files[0]);
+    }
+
+    if((<HTMLElement>document.getElementById("back-cover-visual-book").children[2])) {
+        (<HTMLElement>document.getElementById("back-cover-visual-book")).removeChild((<HTMLElement>document.getElementById("back-cover-visual-book").children[2]));
+    }
+};
